@@ -3,7 +3,7 @@ This package models both the geocentric and interplanetary environment with the 
 ##It's as easy as this
 ```python
 #Import the necessary modules
-from context import Massive_Body, Orbital_Body
+from context import Massive_Body
 #Instantiate Earth as a massive celestial object
 Earth = Massive_Body('Earth')
 #Instantiate Mars as a massive celestial object
