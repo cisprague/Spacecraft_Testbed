@@ -19,12 +19,12 @@ p, v = Sat.Position_and_Velocity_WRT(Mars, times[0])
 #Show results
 print('The position [km] and velocity [km/s] of')
 print('Fengyun_1C_Deb_102 with respect to the centre of Mars:')
-print('Position'), p * 1e-3
+print('Position:'), p * 1e-3
 print('Velocity: '), v * 1e-3
 ```
 ```
 The position [km] and velocity [km/s] of
 Fengyun_1C_Deb_102 with respect to the centre of Mars:
-Position [ -3.16064398e+08   4.67978840e+07   2.47605342e+07]
+Position: [ -3.16064398e+08   4.67978840e+07   2.47605342e+07]
 Velocity:  [-15.22992539 -49.26948181 -14.59125297]
 ```
