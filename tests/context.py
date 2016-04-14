@@ -6,5 +6,5 @@ sys.path.insert(0, os.path.abspath('../'))
 from Spacecraft_Testbed.Bodies.Massive_Body import Massive_Body
 #Class describing orbital bodies of massive celestial bodies
 from Spacecraft_Testbed.Bodies.Orbital_Body import Orbital_Body
-sys.path.insert(0, os.path.abspath('..'))
-import Spacecraft_Testbed
+#Class describing spacecraft
+from Spacecraft_Testbed.Spacecraft.Spacecraft import Spacecraft

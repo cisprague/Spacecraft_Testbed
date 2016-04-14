@@ -214,6 +214,8 @@ def Assign_Orbital_Bodies(attracting_body):
       Body.TLE_line2 = catalogue[col][body]['line2']
       #Assign the body to the attracting body and collection
       setattr(attracting_body.__dict__[col], body, Body)
+  return
+
 def Ephemeris_Pressence(Directory):
   if not isinstance(Directory, str):
     raise ValueError('Object must be a string.')
@@ -225,6 +227,7 @@ def Ephemeris_Pressence(Directory):
     else:
       Pressence = False
   return Pressence
+
 def Install_Ephemeris_Question():
   ans = raw_input('Would you like to install an ephemeris?')
   ans = ans.strip()
@@ -238,9 +241,11 @@ def Install_Ephemeris_Question():
   else:
     raise ValueError('Did not recognise answer.')
   return ans
+
 def Install_Ephemeris(Directory, f_name):
   if Ephemeris_Pressence(Directory):
     return
   else:
     if Install_Ephemeris_Question():
       urllib.urlretrieve('http://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de430.bsp', f_name)
+  return

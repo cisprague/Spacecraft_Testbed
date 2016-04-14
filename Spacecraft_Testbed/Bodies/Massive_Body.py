@@ -24,9 +24,6 @@ Directory = os.path.dirname(__file__)
 #Import for web retrieval
 import urllib
 
-
-
-
 class Massive_Body(object):
   def __init__(self, name):
     #Catalogue of body imformation
@@ -50,6 +47,8 @@ class Massive_Body(object):
     self.velocities = np.empty(shape = (0, 3), dtype = float)
     for char in Body_Information[name].keys():
       setattr(Massive_Body, char.lower(), Body_Information[name][char])
+    return
+  
   def Position_and_Velocity(self, time):
     '''Returns a list of 2 vectors of barycentric position and velocity'''
     path = Directory + '/Information/Ephemerides/'
@@ -86,6 +85,7 @@ class Massive_Body(object):
     V = V * 0.0115741
     #Returns numpy arrays, each of size (0,3)
     return P, V
+  
   def Position_and_Velocity_WRT(self, Body_Ref, time):
     '''This function takes as its arguments the body whose position and velocity are to be calculated for and the reference body from which measurements are referenced from'''
     #Barycentric position and velocity of reference body
@@ -97,6 +97,7 @@ class Massive_Body(object):
     v = V - V0
     #Returns numpy arrays, each of size (0,3)
     return p, v
+  
   def Update_Position_and_Velocity(self, time):
     '''This function takes as its argument time, which will be obtained from the time step of the simulation, and updates the historical arrays, namely: (1,_) times, (_,3) positions, and (_,3) velocities.'''
     #Barycentric position and velocity of body at time

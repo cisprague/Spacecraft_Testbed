@@ -5,7 +5,7 @@ orbital debris fragment with respect to Mars.
 '''
 
 #Import the necesary modules
-from context import Massive_Body, Orbital_Body
+from context import Massive_Body
 #Instantiate Earth as a massive celestial object
 Earth = Massive_Body('Earth')
 #Instantiate Mars as a massive celestial object
