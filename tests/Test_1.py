@@ -1,25 +1,36 @@
-'''
-Example 1:
-Compute the position and velocity of a Fengyun 1C
-orbital debris fragment with respect to Mars.
-'''
-
 #Import the necesary modules
-from context import Massive_Body
-#Instantiate Earth as a massive celestial object
-Earth = Massive_Body('Earth')
-#Instantiate Mars as a massive celestial object
-Mars = Massive_Body('Mars')
-#Instantiate the debris fragment as an orbital body
-Sat = Earth.Fengyun_1C.Fengyun_1C_Deb_102
-#Times at which to compute position and velocity
-times = [2457061.5, 2457062.5, 2457063.5, 2457064.5]
-#Compute the position and velocity of the debris
-#fragment with respect to the centre of Mars.
-p, v = Sat.Position_and_Velocity_WRT(Mars, times[0])
+from context import *
 
-#Show results
-print('The position [km] and velocity [km/s] of')
-print('Fengyun_1C_Deb_102 with respect to the centre of Mars:')
-print('Position'), p * 1e-3
-print('Velocity: '), v * 1e-3
+'''In this test we will try three dimensionally
+plotting Earth and some of its satellites from
+a barycentric persepctive.'''
+
+#Firstly instantiate Earth as a Celestial Body instance
+Earth = Celestial_Body('Earth', satellites = True)
+
+#Earth's satellites were already automatically
+#instantiated as Satellite instances, so they may
+#be readily accesed
+
+#Our time range to plot
+#From January 1st to 2nd , 2016 w/ 1000 point resolution
+times = np.linspace(2457388.000000, 2457389.000000, 1000)
+
+#Insantate the figure for our plot
+fig = plt.figure
+
+#For Earth and 10 of its satellites
+for celestial_body, satellite in zip(Celestial_Body._instances, Satellite._instances[:10]):
+  #For every time step in our time range
+  for time in times:
+    #Update the position and velocity of our bodies
+    Celestial_Body.Update_Position_and_Velocity(time)
+    Satellite.Update_Position_and_Velocity(time)
+    pass
+  #Now plot their position time-traces
+  celestial_body.Plot_3D(fig)
+  satellite.Plot_3D(fig)
+  pass
+
+#Be patient, this will take about 20 seconds.
+#NUMBA JIT compillation will be implemented soon!

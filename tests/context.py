@@ -1,10 +1,10 @@
 #Initialise test contexts
-import os
-import sys
+import os, sys
+import numpy as np
+import matplotlib.pyplot as plt
 sys.path.insert(0, os.path.abspath('../'))
-#Class describing massive celestial bodies of solar system
-from Spacecraft_Testbed.Bodies.Massive_Body import Massive_Body
-#Class describing orbital bodies of massive celestial bodies
-from Spacecraft_Testbed.Bodies.Orbital_Body import Orbital_Body
-#Class describing spacecraft
-from Spacecraft_Testbed.Spacecraft.Spacecraft import Spacecraft
+
+from Spacecraft_Testbed.Body import Celestial_Body, Satellite, Body
+from Spacecraft_Testbed.Utilities import Satellite_Dictionary, Celestial_Body_Attributes
+
+
