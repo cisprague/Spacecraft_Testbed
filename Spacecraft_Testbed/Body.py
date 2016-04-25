@@ -71,6 +71,7 @@ class Body(object):
   
   def Plot_3D(self, figure):
     ax = figure.gca(projection = '3d')
+    ax._axis3don = False
     x = self.positions[:, 0]
     y = self.positions[:, 1]
     z = self.positions[:, 2]

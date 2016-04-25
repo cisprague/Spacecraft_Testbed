@@ -14,7 +14,7 @@ Earth = Celestial_Body('Earth')
 
 #Our time range to plot
 #From January 1st to 2nd , 2016 w/ 1000 point resolution
-times = np.linspace(2457388.000000, 2457390.500000, 2000)
+times = np.linspace(2457388.000000, 2457390.500000, 3000)
 
 #the figure
 fig = plt.figure()
