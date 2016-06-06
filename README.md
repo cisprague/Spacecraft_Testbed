@@ -1,6 +1,6 @@
 #Spacecraft Testbed
 This package models both the geocentric and interplanetary environment with the aim to facilitate the testing and development of various types spacecraft guidance, navigation, and control schemes.
-<img src="https://rawgit.com/CISprague/Spacecraft_Testbed/master/tests/Figures/Earth_and_Fengyun_Barycentric.svg">
+<img src="https://cdn.rawgit.com/CISprague/Spacecraft_Testbed/master/tests/Figures/Fengyun_and_Earth_Barycentric_1.svg">
 ##It's as easy as this
 ```python
 #Import the necessary modules
