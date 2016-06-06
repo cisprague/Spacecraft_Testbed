@@ -1,10 +1,8 @@
-#Initialise test contexts
-import os, sys
+# Initialise test contexts
 import numpy as np
+import os
+import sys
+sys.path.insert(0, os.path.abspath('../Spacecraft_Testbed'))
+
+from Spacecraft_Testbed.Body import Celestial_Body, Spacecraft, Satellite
 import matplotlib.pyplot as plt
-sys.path.insert(0, os.path.abspath('../'))
-
-from Spacecraft_Testbed.Body import Celestial_Body, Satellite, Body
-from Spacecraft_Testbed.Utilities import Satellite_Dictionary, Celestial_Body_Attributes
-
-

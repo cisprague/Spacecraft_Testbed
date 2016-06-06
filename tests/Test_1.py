@@ -1,36 +1,23 @@
-#Import the necesary modules
+# Import the necesary modules
 from context import *
 
 '''In this test we will try three dimensionally
 plotting Earth and some of its satellites from
 a barycentric persepctive.'''
 
-#Firstly instantiate Earth as a Celestial Body instance
+# Firstly instantiate Earth as a Celestial Body instance
 Earth = Celestial_Body('Earth')
+Moon  = Celestial_Body('Moon')
+Mars  = Celestial_Body('Mars')
+Venus = Celestial_Body('Venus')
 
-#Earth's satellites were already automatically
-#instantiated as Satellite instances, so they may
-#be readily accesed
+# Times
+times = np.linspace(2457388.000000, 2457392.200000, 1000)
 
-#Our time range to plot
-#From January 1st to 2nd , 2016 w/ 1000 point resolution
-times = np.linspace(2457388.000000, 2457390.500000, 3000)
+# Spacecraft
+SC = Spacecraft('CubeSat', Satellite._instances[0].Position_and_Velocity(times[0]), times[0])
+#print SC.deriv(Celestial_Body._instances)
 
-#the figure
-fig = plt.figure()
-
-#the satellites
-for sat in Satellite._instances[:20]:
-  for time in times:
-    sat.Update_Position_and_Velocity(time)
-    pass
-  sat.Plot_3D(fig)
-  pass
-
-#the planets
-for cb in Celestial_Body._instances:
-  for time in times:
-    cb.Update_Position_and_Velocity(time)
-    pass
-  cb.Plot_3D(fig)
-  pass
+print SC.positions
+print SC.velocities
+print SC.accelerations
