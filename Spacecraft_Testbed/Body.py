@@ -235,17 +235,17 @@ class Spacecraft(Body):
     def Gravitational_Acceleration(self, body):
         '''Computes the gravitational acceleration of the spacecraft due to the influence of a massive body.'''
         # Newtonian gravitational constant [m^3 kg^-1 s^-2]
-        G = constants.G
+        G      = constants.G
         # Mass of massive body
-        M = body.mass
+        M      = body.mass
         # Position of spacecraft with respect to massive body
-        r, v = self.Position_and_Velocity_WRT(body)
+        r, v   = self.Position_and_Velocity_WRT(body)
         # Magnitude of spacecraft's relative position
         r_norm = np.linalg.norm(r)
         # Unit vector directed from massive body to spacecraft
-        r_hat = np.divide(r, r_norm)
+        r_hat  = np.divide(r, r_norm)
         # Gravitational acceleration vector
-        g = np.multiply(-G, M)
-        g = np.divide(g, np.power(r_norm, 2))
-        g = np.multiply(g, r_hat)
+        g      = np.multiply(-G, M)
+        g      = np.divide(g, np.power(r_norm, 2))
+        g      = np.multiply(g, r_hat)
         return g

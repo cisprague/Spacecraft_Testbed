@@ -12,9 +12,9 @@ times = np.linspace(2457388.000000, 2457392.200000, 1000)
 Sat = Earth.Satellites.Fengyun_1C.Fengyun_1C
 
 # Instantiate Spacecraft
-epoch_t = times[0]
+epoch_t          = times[0]
 epoch_p, epoch_v = Sat.Position_and_Velocity(epoch_t)
-SC = Spacecraft('CubeSat', epoch_p, epoch_v, epoch_t)
+SC               = Spacecraft('CubeSat', epoch_p, epoch_v, epoch_t)
 
 for body in Celestial_Body._instances:
     g = SC.Gravitational_Acceleration(body)
