@@ -12,6 +12,7 @@ from sgp4.earth_gravity import wgs84 as grav_const
 import numpy                         as np
 import sys
 import os
+
 # Specify the user's path to this directory
 Directory = os.path.dirname(__file__)
 
@@ -248,8 +249,6 @@ def Celestial_Body_Attributes():
                   'rotation_period':       -20997000.0,
                   'surface_pressure':      9200000.0}}
     return cba
-pass
-
 
 def Position_and_Velocity_Celestial_Body(celestial_body, time):
     # The JPL ephemeris index of the celestial body
@@ -285,28 +284,24 @@ def Satellite_Dictionary(celestial_body_name):
     path = Directory + '/Information/Celestial_Bodies/' + name_cb + '/Satellites'
     # Initialise the dictionary
     sat_dict = {}
-
     # Scan the Satellites folder for type collections
     for type_col in os.listdir(path):
         # Initialise a sub dictionary for the type collection
         sat_dict[type_col] = {}
         # Descend into the collection
         path1 = path + '/' + type_col
-
         # Scan the type collection for satellites
         for sat in os.listdir(path1):
             # Initialise a sub dictionary for the spacecraft
             sat_dict[type_col][sat] = {}
             # Descend into satellite
             path2 = path1 + '/' + sat
-
             # Scan the satellite  folder for TLE
             for f_name in os.listdir(path2):
                 if f_name.endswith('.tle'):
                     path3 = path2 + '/' + f_name
                     # Read the TLE
                     TLE = Read_TLE(path3)
-
                     # Scan the TLE for objects
                     for obj in TLE.keys():
                         # First line of the object's TLE
@@ -315,10 +310,6 @@ def Satellite_Dictionary(celestial_body_name):
                         line2 = TLE[obj]['line2']
                         # Instantiate a Satellite
                         sat_dict[type_col][sat][obj] = (line1, line2)
-                    pass
-                pass
-            pass
-        pass
     return sat_dict
 
 

@@ -181,7 +181,7 @@ class Spacecraft(Body):
     '''
     A spacecraft is a vehicle used for traveling in space. An object of this type is capable of making its own decisions an actively altering its dynamics via thrust.
 
-    DV: Delta-V is a measure of the potential impulse needed to perform maneuvres. It is a scaler that has the units of speed. It is not the same as the physical change in velocity of the vehicle. Delta-V (ΔV) is produced by reaction engines, such as rocket engines, and is proportional to the thrust per unit mass, and brun time, and is used to determine the mass of propellant required for the given maneuvre through the Tsiolkovsky  rocket equation. For Multiple maneuvres, delta-V sums linearly.
+    DV: Delta-V is a measure of the potential impulse needed to perform maneuvres. It is a scaler that has the units of speed. It is not the same as the physical change in velocity of the vehicle. Delta-V is produced by reaction engines, such as rocket engines, and is proportional to the thrust per unit mass, and brun time, and is used to determine the mass of propellant required for the given maneuvre through the Tsiolkovsky  rocket equation. For Multiple maneuvres, delta-V sums linearly.
 
     Isp: Specific impulse is a measure of the efficiency of rocket and jet engines. By definition, it is the total impulse (or change in momentum) delivered per unit of propellant consumed and is dimensionally equivalent to the generated thrust divided by the propellant flow rate.
 
@@ -190,19 +190,16 @@ class Spacecraft(Body):
     DV            [m/s]   = scaler
     Isp           [s]     = scaler
     T_max         [N]     = scaler
-    times         [s]     = [t_i t_i+1 ... t_I] [s]
-    positions     [m]     = | x_i    y_i    z_i    |
-                            | x_i+1  y_i+1  z_i+1  |
-                            | :      :      :      |
-                            | x_I    y_I    z_I    |
-    velocities    [m/s]   = | vx_i   vy_i   vz_i   |
-                            | vx_i+1 vy_i+1 vz_i+1 |
-                            | :      :      :      |
-                            | vx_I   vy_I   vz_I   |
-    accelerations [m/s^2] = | ax_i   ay_i   az_i   |
-                            | ax_i+1 ay_i+1 az_i+1 |
-                            | :     :     :        |
-                            | ax_I   ay_I   az_I   |
+    times         [s]     = [ t_i    ...    t_I  ]
+    positions     [m]     = | x_i    y_i    z_i  |
+                            | :      :      :    |
+                            | x_I    y_I    z_I  |
+    velocities    [m/s]   = | vx_i   vy_i   vz_i |
+                            | :      :      :    |
+                            | vx_I   vy_I   vz_I |
+    accelerations [m/s^2] = | ax_i   ay_i   az_i |
+                            | :     :     :      |
+                            | ax_I   ay_I   az_I |
     '''
 
     def __init__(self      , name,
@@ -220,7 +217,35 @@ class Spacecraft(Body):
         # Positions             [m]
         self.positions     = np.asarray([epoch_p])
         # Velocities            [m/s]
-        self.velocities    = np.asarray([epoch_pv[1, :]])
+        self.velocities    = np.asarray([epoch_v])
         # Acceleration          [m/s^2]
         self.accelerations = np.empty(shape=(0, 3), dtype=np.float64)
-        return None
+
+    def Position_and_Velocity_WRT(self, body):
+        '''Computes position and velocity of spacecraft with respect to a specified body.'''
+        p            = self.positions[-1]  # Most recent position
+        v            = self.velocities[-1] # Most recent velocity
+        t            = self.times[-1]      # Most recent time
+        # Position and velocity of the body
+        P, V         = body.Position_and_Velocity(t)
+        # Relative position and velocity of spacecraft to body
+        p_rel, v_rel = np.subtract(p, P), np.subtract(v, V)
+        return p_rel, v_rel
+
+    def Gravitational_Acceleration(self, body):
+        '''Computes the gravitational acceleration of the spacecraft due to the influence of a massive body.'''
+        # Newtonian gravitational constant [m^3 kg^-1 s^-2]
+        G = constants.G
+        # Mass of massive body
+        M = body.mass
+        # Position of spacecraft with respect to massive body
+        r, v = self.Position_and_Velocity_WRT(body)
+        # Magnitude of spacecraft's relative position
+        r_norm = np.linalg.norm(r)
+        # Unit vector directed from massive body to spacecraft
+        r_hat = np.divide(r, r_norm)
+        # Gravitational acceleration vector
+        g = np.multiply(-G, M)
+        g = np.divide(g, np.power(r_norm, 2))
+        g = np.multiply(g, r_hat)
+        return g
