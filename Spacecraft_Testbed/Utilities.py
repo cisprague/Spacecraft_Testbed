@@ -38,6 +38,10 @@ def Celestial_Body_Attributes():
     '''Returns all the attributes of a specified
     celestial body. All units are SI.'''
     cba = {
+        'Sun'  : {'jplephem_index':           (0, 10),
+                  'mass':                     1.989500e+24,
+                  'diameter':                 1392e+6
+                                                    },
         'Earth': {'aphelion':                152100000000.0,
                   'density':                 5514.0,
                   'diameter':                12756000.0,

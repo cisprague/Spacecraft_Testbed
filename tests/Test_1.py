@@ -4,6 +4,7 @@ from context import *
 # Instantiate Earth and Moon and their satellites
 Earth = Celestial_Body('Earth')
 Moon  = Celestial_Body('Moon')
+Sun   = Celestial_Body('Sun')
 
 # Times
 times = np.linspace(2457388.000000, 2457392.200000, 1000)
@@ -21,5 +22,9 @@ for body in Celestial_Body._instances:
     print('The gravitational acceleration in m/s^2 due to ' + body.name + ':')
     print('In vector form: ' + str(g))
     print('As magnitude: '   + str(np.linalg.norm(g)))
+    print('The altitude above ' + body.name + ' in km:')
+    print(str(SC.Altitude(body)/1000.))
+    print('The atmospheric density:')
+    print(str(SC.Aerodynamic_Acceleration(body)))
 print
-print SC.Cummulative_Gravitational_Acceleration(Celestial_Body._instances)
+print SC.Acceleration(Celestial_Body._instances)

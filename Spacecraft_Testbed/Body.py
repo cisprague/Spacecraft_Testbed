@@ -14,6 +14,7 @@ from   scipy                       import constants
 from   Utilities                   import *
 from   matplotlib.colors           import cnames
 from   mpl_toolkits.mplot3d        import Axes3D
+from   aerocalc.std_atm            import alt2density
 
 class Body(object):
 
@@ -203,15 +204,19 @@ class Spacecraft(Body):
     '''
 
     def __init__(self      , name,
-                 epoch_p   , epoch_v, epoch_t,
-                 mass=4    , DV=220 , Isp=220, T_max=11.16):
-        Body.__init__(self, name, mass)
+                 epoch_p   , epoch_v, epoch_t, area=0.01,
+                 epoch_m=4    , DV=220 , Isp=220, T_max=11.16):
+        Body.__init__(self, name, epoch_m)
         # The potential delta V [m/s]
         self.DV            = 220
         # Specific impulse      [s]
         self.Isp           = 220
         # Max thrust            [N]
         self.T_max         = 11.16
+        # Mass                  [kg]
+        self.masses        = np.asarray([epoch_m])
+        # Area                  [m^2]
+        self.area          = area
         # Epoch time            [s]
         self.times         = np.append(self.times, epoch_t)
         # Positions             [m]
@@ -219,7 +224,8 @@ class Spacecraft(Body):
         # Velocities            [m/s]
         self.velocities    = np.asarray([epoch_v])
         # Acceleration          [m/s^2]
-        self.accelerations = np.empty(shape=(0, 3), dtype=np.float64)
+        self.accelerations = np.asarray([self.Acceleration(Celestial_Body._instances)])
+
 
     def Position_and_Velocity_WRT(self, body):
         '''Computes position and velocity of spacecraft with respect to a specified body.'''
@@ -234,24 +240,83 @@ class Spacecraft(Body):
 
     def Gravitational_Acceleration(self, body):
         '''Computes the gravitational acceleration of the spacecraft due to the influence of a massive body.'''
-        # Newtonian gravitational constant [m^3 kg^-1 s^-2]
+        # Newtonian gravitational constant                    [m^3 kg^-1 s^-2]
         G      = constants.G
-        # Mass of massive body
+        # Mass of massive body                                [kg]
         M      = body.mass
-        # Position of spacecraft with respect to massive body
+        # Position of spacecraft with respect to massive body [m], [m/s]
         r, v   = self.Position_and_Velocity_WRT(body)
-        # Magnitude of spacecraft's relative position
+        # Magnitude of spacecraft's relative position         [m]
         r_norm = np.linalg.norm(r)
         # Unit vector directed from massive body to spacecraft
         r_hat  = np.divide(r, r_norm)
-        # Gravitational acceleration vector
+        # Gravitational acceleration vector                   [m/s^2]
         g      = np.multiply(-G, M)
         g      = np.divide(g, np.power(r_norm, 2))
         g      = np.multiply(g, r_hat)
         return g
 
     def Cummulative_Gravitational_Acceleration(self, bodies):
-        g = 0
+        '''Computes the cummulative gravitational acceleration due the influence of all the massive bodies in the interplanetary environment.'''
+        g     = 0
         for body in bodies:
             g += self.Gravitational_Acceleration(body)
         return g
+
+    def Solar_Radiation_Acceleration(self, sun):
+        '''Computes the spacecraft's acceleration due to solar radiation pressure at a given distance from the Sun, assuming it is a sphere.'''
+
+        # Coefficient of reflectivity
+        CR    = 0.75
+        # Solar radiation constant                     [kg*m/s^2]
+        G     = 1e+17
+        # Distance vector from the Sun                 [m]
+        R_vec = self.Position_and_Velocity_WRT(sun)[0]
+        # Magnitude of distance                        [m]
+        R     = np.linalg.norm(R_vec)
+        # Solar radiation pressure                     [Pa]
+        P     = np.divide(G, np.power(R, 2))
+        # Most recent mass of spacecraft               [kg]
+        m     = self.masses[-1]
+        # Cross sectional area seen by the Sun         [m^2]
+        A     = self.area
+        # Unit vector from the Sun to the spacecraft
+        u_hat = np.divide(R_vec, R)
+        # Acceleration due to solar radiation pressure [m/s^2]
+        a     = np.divide(P, m)
+        a     = np.multiply(CR, a)
+        a     = np.multiply(a, A)
+        a     = np.multiply(a, u_hat)
+        return a
+
+    def Altitude(self, body):
+        '''Computes the spacecrafts scaler distance away from the body's surface'''
+        # Mean distance from the body's centre to its surface
+        radius = np.divide(body.diameter, 2)
+        # Spacecraft's distance from centre of body
+        r      = np.linalg.norm(self.Position_and_Velocity_WRT(body))
+        # Spacecraft's altitude
+        H      = np.subtract(r, radius)
+        return H
+
+    def Aerodynamic_Acceleration(self, body):
+        '''Computes the spacecraft's acceleration due to aerodynamic drag whilst encountering the body's atmosphere.'''
+        # Altitude of spacecraft above the body [m]
+        H = self.Altitude(body)
+        # Atmospheric density at this altitude  [kg/m^3]
+        try:
+            rho = alt2density(H, alt_units='m', density_units='kg/m**3')
+        except:
+            rho = 0.0
+        return rho
+
+    def Acceleration(self, bodies):
+        '''Computes the overall acceleration of the spacecraft due to the pressence of the solar system's bodies.'''
+        a         = 0
+        for body in bodies:
+            a    += self.Gravitational_Acceleration(body)
+            if body.name is 'Earth':
+                a += self.Aerodynamic_Acceleration(body)
+            if body.name is 'Sun':
+                a += self.Solar_Radiation_Acceleration(body)
+        return a
