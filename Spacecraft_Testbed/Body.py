@@ -249,3 +249,9 @@ class Spacecraft(Body):
         g      = np.divide(g, np.power(r_norm, 2))
         g      = np.multiply(g, r_hat)
         return g
+
+    def Cummulative_Gravitational_Acceleration(self, bodies):
+        g = 0
+        for body in bodies:
+            g += self.Gravitational_Acceleration(body)
+        return g

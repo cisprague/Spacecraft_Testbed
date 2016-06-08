@@ -21,3 +21,5 @@ for body in Celestial_Body._instances:
     print('The gravitational acceleration in m/s^2 due to ' + body.name + ':')
     print('In vector form: ' + str(g))
     print('As magnitude: '   + str(np.linalg.norm(g)))
+print
+print SC.Cummulative_Gravitational_Acceleration(Celestial_Body._instances)
