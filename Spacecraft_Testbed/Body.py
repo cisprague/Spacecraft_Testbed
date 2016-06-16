@@ -5,16 +5,17 @@
 // https://github.com/CISprague/Spacecraft_Testbed //
 '''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-import numpy                       as     np
-import matplotlib                  as     mpl
-import matplotlib.pyplot           as     plt
-import matplotlib.animation        as     animation
-import mpl_toolkits.mplot3d.axes3d as     p3
-from   scipy                       import constants
-from   Utilities                   import *
-from   matplotlib.colors           import cnames
-from   mpl_toolkits.mplot3d        import Axes3D
-from   aerocalc.std_atm            import alt2density
+import numpy as np
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+import mpl_toolkits.mplot3d.axes3d as p3
+from scipy import constants
+from Utilities import *
+from matplotlib.colors import cnames
+from mpl_toolkits.mplot3d import Axes3D
+from aerocalc.std_atm import alt2density
+
 
 class Body(object):
 
@@ -25,15 +26,15 @@ class Body(object):
 
     def __init__(self, name, mass=None):
         # __base__ attribute will return the Body class
-        self.__base__   = Body
+        self.__base__ = Body
         # Name of body
-        self.name       = name
+        self.name = name
         # Mass of body
-        self.mass       = np.float64(mass)
+        self.mass = np.float64(mass)
         # Time record
-        self.times      = np.empty([1, 0], dtype=np.float64)
+        self.times = np.empty([1, 0], dtype=np.float64)
         # Position record
-        self.positions  = np.empty([0, 3], dtype=np.float64)
+        self.positions = np.empty([0, 3], dtype=np.float64)
         # Velocity record
         self.velocities = np.empty([0, 3], dtype=np.float64)
         # Append to _instances
@@ -49,10 +50,10 @@ class Body(object):
         # Reference body's barycentric position and velocity
         P0V0 = body_ref.Position_and_Velocity(time)
         # Measured body's barycentric position and velocity
-        PV   = self.Position_and_Velocity(time)
+        PV = self.Position_and_Velocity(time)
         # Measured body's position and velocity with respect
         # to reference body
-        pv   = np.subtract(PV, P0V0)
+        pv = np.subtract(PV, P0V0)
         # Returns (2,3) numpy array
         return pv
 
@@ -63,10 +64,10 @@ class Body(object):
         arrays, namely: (1,_) times, (_,3) positions,
         and (_,3) velocities.'''
         # Barycentric position and velocity of body at time (2,3)
-        pv              = self.Position_and_Velocity(time)
+        pv = self.Position_and_Velocity(time)
         # Append results to history keeping list for this body
-        self.times      = np.append(self.times, time)
-        self.positions  = np.vstack([self.positions , pv[0, :]])
+        self.times = np.append(self.times, time)
+        self.positions = np.vstack([self.positions, pv[0, :]])
         self.velocities = np.vstack([self.velocities, pv[1, :]])
         # Also returns barycentric position and velocty
         return None
@@ -164,7 +165,7 @@ class Satellite_Collection(object):
 
     def __init__(self, name, attracting_body):
         # The name of the collection
-        self.name            = name
+        self.name = name
         # The name of its attracting body
         self.attracting_body = attracting_body
         return None
@@ -177,6 +178,7 @@ class Satellites(object):
     def __init__(self):
         return None
     pass
+
 
 class Spacecraft(Body):
     '''
@@ -203,37 +205,37 @@ class Spacecraft(Body):
                             | ax_I   ay_I   az_I |
     '''
 
-    def __init__(self      , name,
-                 epoch_p   , epoch_v, epoch_t, area=0.01,
-                 epoch_m=4    , DV=220 , Isp=220, T_max=11.16):
+    def __init__(self, name,
+                 epoch_p, epoch_v, epoch_t, area=0.01,
+                 epoch_m=4, DV=220, Isp=220, T_max=11.16):
         Body.__init__(self, name, epoch_m)
         # The potential delta V [m/s]
-        self.DV            = 220
+        self.DV = 220
         # Specific impulse      [s]
-        self.Isp           = 220
+        self.Isp = 220
         # Max thrust            [N]
-        self.T_max         = 11.16
+        self.T_max = 11.16
         # Mass                  [kg]
-        self.masses        = np.asarray([epoch_m])
+        self.masses = np.asarray([epoch_m])
         # Area                  [m^2]
-        self.area          = area
+        self.area = area
         # Epoch time            [s]
-        self.times         = np.append(self.times, epoch_t)
+        self.times = np.append(self.times, epoch_t)
         # Positions             [m]
-        self.positions     = np.asarray([epoch_p])
+        self.positions = np.asarray([epoch_p])
         # Velocities            [m/s]
-        self.velocities    = np.asarray([epoch_v])
+        self.velocities = np.asarray([epoch_v])
         # Acceleration          [m/s^2]
-        self.accelerations = np.asarray([self.Acceleration(Celestial_Body._instances)])
-
+        self.accelerations = np.asarray(
+            [self.Acceleration(Celestial_Body._instances)])
 
     def Position_and_Velocity_WRT(self, body):
         '''Computes position and velocity of spacecraft with respect to a specified body.'''
-        p            = self.positions[-1]  # Most recent position
-        v            = self.velocities[-1] # Most recent velocity
-        t            = self.times[-1]      # Most recent time
+        p = self.positions[-1]  # Most recent position
+        v = self.velocities[-1]  # Most recent velocity
+        t = self.times[-1]      # Most recent time
         # Position and velocity of the body
-        P, V         = body.Position_and_Velocity(t)
+        P, V = body.Position_and_Velocity(t)
         # Relative position and velocity of spacecraft to body
         p_rel, v_rel = np.subtract(p, P), np.subtract(v, V)
         return p_rel, v_rel
@@ -241,24 +243,24 @@ class Spacecraft(Body):
     def Gravitational_Acceleration(self, body):
         '''Computes the gravitational acceleration of the spacecraft due to the influence of a massive body.'''
         # Newtonian gravitational constant                    [m^3 kg^-1 s^-2]
-        G      = constants.G
+        G = constants.G
         # Mass of massive body                                [kg]
-        M      = body.mass
+        M = body.mass
         # Position of spacecraft with respect to massive body [m], [m/s]
-        r, v   = self.Position_and_Velocity_WRT(body)
+        r, v = self.Position_and_Velocity_WRT(body)
         # Magnitude of spacecraft's relative position         [m]
         r_norm = np.linalg.norm(r)
         # Unit vector directed from massive body to spacecraft
-        r_hat  = np.divide(r, r_norm)
+        r_hat = np.divide(r, r_norm)
         # Gravitational acceleration vector                   [m/s^2]
-        g      = np.multiply(-G, M)
-        g      = np.divide(g, np.power(r_norm, 2))
-        g      = np.multiply(g, r_hat)
+        g = np.multiply(-G, M)
+        g = np.divide(g, np.power(r_norm, 2))
+        g = np.multiply(g, r_hat)
         return g
 
     def Cummulative_Gravitational_Acceleration(self, bodies):
         '''Computes the cummulative gravitational acceleration due the influence of all the massive bodies in the interplanetary environment.'''
-        g     = 0
+        g = 0
         for body in bodies:
             g += self.Gravitational_Acceleration(body)
         return g
@@ -267,26 +269,26 @@ class Spacecraft(Body):
         '''Computes the spacecraft's acceleration due to solar radiation pressure at a given distance from the Sun, assuming it is a sphere.'''
 
         # Coefficient of reflectivity
-        CR    = 0.75
+        CR = 0.75
         # Solar radiation constant                     [kg*m/s^2]
-        G     = 1e+17
+        G = 1e+17
         # Distance vector from the Sun                 [m]
         R_vec = self.Position_and_Velocity_WRT(sun)[0]
         # Magnitude of distance                        [m]
-        R     = np.linalg.norm(R_vec)
+        R = np.linalg.norm(R_vec)
         # Solar radiation pressure                     [Pa]
-        P     = np.divide(G, np.power(R, 2))
+        P = np.divide(G, np.power(R, 2))
         # Most recent mass of spacecraft               [kg]
-        m     = self.masses[-1]
+        m = self.masses[-1]
         # Cross sectional area seen by the Sun         [m^2]
-        A     = self.area
+        A = self.area
         # Unit vector from the Sun to the spacecraft
         u_hat = np.divide(R_vec, R)
         # Acceleration due to solar radiation pressure [m/s^2]
-        a     = np.divide(P, m)
-        a     = np.multiply(CR, a)
-        a     = np.multiply(a, A)
-        a     = np.multiply(a, u_hat)
+        a = np.divide(P, m)
+        a = np.multiply(CR, a)
+        a = np.multiply(a, A)
+        a = np.multiply(a, u_hat)
         return a
 
     def Altitude(self, body):
@@ -302,19 +304,33 @@ class Spacecraft(Body):
     def Aerodynamic_Acceleration(self, body):
         '''Computes the spacecraft's acceleration due to aerodynamic drag whilst encountering the body's atmosphere.'''
         # Altitude of spacecraft above the body [m]
-        H = self.Altitude(body)
+        H       = self.Altitude(body)
         # Atmospheric density at this altitude  [kg/m^3]
         try:
             rho = alt2density(H, alt_units='m', density_units='kg/m**3')
         except:
-            rho = 0.0
-        return rho
+            return 0.0
+        # Coefficient of drag
+        CD      = 2.2
+        # Planaform area of satellite perpendicular to velocity
+        A       = self.area
+        # Velocity vector with respect to body
+        v_vec   = self.Position_and_Velocity_WRT(body)[1]
+        # Velocity magnitude with respect to body
+        v       = np.linalg.norm(v_vec)
+        # Velocity vector direction from body to spacecraft
+        v_hat   = np.divide(v_vec, v)
+        # Most recent mass of spacecraft
+        m       = self.masses[-1]
+        # Aerodynamic acceleration of spacecraft due to body's atmosphere
+        aa      = (rho * CD * A * v**2 * v_hat) / (2 * m)
+        return aa
 
     def Acceleration(self, bodies):
         '''Computes the overall acceleration of the spacecraft due to the pressence of the solar system's bodies.'''
-        a         = 0
+        a = 0
         for body in bodies:
-            a    += self.Gravitational_Acceleration(body)
+            a += self.Gravitational_Acceleration(body)
             if body.name is 'Earth':
                 a += self.Aerodynamic_Acceleration(body)
             if body.name is 'Sun':
