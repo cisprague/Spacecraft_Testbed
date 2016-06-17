@@ -1,4 +1,6 @@
 #Spacecraft Testbed
+
+[![Join the chat at https://gitter.im/CISprague/Spacecraft_Testbed](https://badges.gitter.im/CISprague/Spacecraft_Testbed.svg)](https://gitter.im/CISprague/Spacecraft_Testbed?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 This package models both the geocentric and interplanetary environment with the aim to facilitate the testing and development of various types spacecraft guidance, navigation, and control schemes.
 <img src="https://cdn.rawgit.com/CISprague/Spacecraft_Testbed/master/tests/Figures/Fengyun_and_Earth_Barycentric_1.svg">
 ##It's as easy as this
