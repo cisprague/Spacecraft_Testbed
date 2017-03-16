@@ -14,7 +14,7 @@ from scipy import constants
 from Utilities import *
 from matplotlib.colors import cnames
 from mpl_toolkits.mplot3d import Axes3D
-from aerocalc.std_atm import alt2density
+#from aerocalc.std_atm import alt2density
 
 
 class Body(object):
