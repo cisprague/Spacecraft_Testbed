@@ -70,7 +70,7 @@ tables==3.1.1
 tabulate==0.7.5
 tornado==3.1.1
 unity-lens-photos==1.0
-urllib3==1.7.1
+urllib3==1.26.5
 wheel==0.24.0
 wsgiref==0.1.2
 xdiagnose==3.6.3build2
