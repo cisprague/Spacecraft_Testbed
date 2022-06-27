@@ -54,7 +54,7 @@ pytuio==0.1
 pytz==2012c
 pyxdg==0.25
 pyzmq==14.0.1
-reportlab==3.0
+reportlab==3.5.55
 requests==2.2.1
 scipy==0.13.3
 sessioninstaller==0.0.0
